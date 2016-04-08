@@ -21,6 +21,20 @@ test_data = {
         'open': True,
         'latitude': 49.61308,
         'longitude': 6.13016
+    },
+    'Test Closed': {
+        'capacity': 334,
+        'available': 4,
+        'open': False,
+        'latitude': 49.62308,
+        'longitude': 6.13016
+    },
+    'Test Full': {
+        'capacity': 150,
+        'available': 0,
+        'open': True,
+        'latitude': 49.60008,
+        'longitude': 6.11016
     }
 }
 
