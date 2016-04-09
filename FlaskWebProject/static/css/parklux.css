@@ -123,6 +123,10 @@ html, body {
   #about-button {
     display: none;
   }
+
+  #parklux-text, #header-right {
+    font-size: 26px;
+  }
 }
 
 /* Slider CSS */
