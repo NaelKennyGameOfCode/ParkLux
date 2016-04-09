@@ -10,5 +10,4 @@ python runserver.py
 ```
 
 Licenses
-
 Parking by Romualdas Jurgaitis from the Noun Project
