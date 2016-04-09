@@ -30,7 +30,6 @@ html, body {
 
 #header div {
   color: white;
-  width: 33%;
 }
 
 #header-right {
@@ -113,6 +112,17 @@ html, body {
   text-align: center;
   font-size: 26px;
   font-family: Montserrat;
+}
+
+/* Responsive CSS */
+@media (max-width: 700px) {
+  #history-button {
+    display: none;
+  }
+
+  #about-button {
+    display: none;
+  }
 }
 
 /* Slider CSS */
