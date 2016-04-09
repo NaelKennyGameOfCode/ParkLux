@@ -25,7 +25,7 @@ function gotLocation(position) {
 $('#about-button').click(function () {
   swal({
     title: 'About',
-    html: 'This web app displays live parking data in the City of Luxembourg, tracks historical trends in parking behavior, and quickly finds the closest available parking lot to your current location.<br/><br/>Built by <a href="http://kennysong.com" target="_blank">Kenny Song</a> and Nael Hailemariam in 24 hours for the <a href="http://www.gameofcode.eu/" target="_blank">Game of Code 2016</a>.',
+    html: 'This web app displays live parking data in the City of Luxembourg, tracks historical trends in parking behavior, and quickly finds the closest available parking lot to your current location.<br/><br/>Built by <a href="http://kennysong.com" target="_blank">Kenny Song</a> and <a href="https://www.linkedin.com/in/naelstudentatbuaa" target="_blank">Nael Hailemariam</a> in 24 hours for the <a href="http://www.gameofcode.eu/" target="_blank">Game of Code 2016</a>.',
     confirmButtonText: 'Awesome!',
   });
 });
