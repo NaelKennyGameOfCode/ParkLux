@@ -29,6 +29,10 @@ $('#about-button').click(function () {
   });
 });
 
+$('#history-button').click(function () {
+  window.location = '/history';
+});
+
 /*********************************************
  * Map manipulation functions
  *********************************************/
