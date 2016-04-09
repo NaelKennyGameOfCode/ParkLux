@@ -1,6 +1,7 @@
 import datetime
 import requests
 import model
+import time
 from bs4 import BeautifulSoup
 
 def get_parking_data():
@@ -26,7 +27,9 @@ def get_parking_data():
      
 def get_data_and_save():
     data = get_parking_data()
-    print('Data retrieved at ' + str(datetime.datetime.now()), data)
+    print('Data retrieved at ' + str(datetime.datetime.now()))
     model.save_to_firebase(data)
 
-get_data_and_save()
+while True:
+    get_data_and_save()
+    time.sleep(60)

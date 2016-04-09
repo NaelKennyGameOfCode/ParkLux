@@ -153,15 +153,29 @@ function drawLotsFromSnapshot(snapshot) {
           icon: '/static/img/unavailable_icon.png'
         });
       }
+      
 
-      // var infoWindow = new google.maps.InfoWindow({
-      //   content: lotName + ': ' + lot.available + '/' + lot.longitude + ' available'
-      // });
-      // google.maps.event.addListener(marker, "click", function (e) { infoWindow.open(map, this); });
+      var className = (lot.available > 0 && lot.open) ? 'green' : 'red';
+      var infoContent = '<h2 class=' + className + '>' + lotName + '</h2>' +
+                        '<p><strong>Available</strong>: ' + lot.available + '</p>' +
+                        '<p><strong>Capacity</strong>: ' + lot.capacity + '</p>' +
+                        '<p><strong>Currently Open</strong>: ' + (lot.open ? 'Yes' : 'No') + '</p>' +
+                        '<p><strong>Coordinates</strong>: <a href="http://maps.google.com/maps?q=' + lot.latitude + ',' + lot.longitude + '&z=14&ll=' + lot.latitude + ',' + lot.longitude + '" target="_blank">(' + lot.latitude + ', ' + lot.longitude + ')</a></p>';
+      markerAddInfoWindow(marker, infoContent);
 
       markers.push(marker);
     }
   }
+}
+
+// Add event listener to open a InfoWindow with content when marker is clicked
+function markerAddInfoWindow(marker, content) {
+  var infoWindow = new google.maps.InfoWindow({
+    content: content
+  });
+  google.maps.event.addListener(marker, "click", function (e) { 
+    infoWindow.open(map, this); 
+  });
 }
 
 // Undraws all parking lot markers on the map and empties the markers array
@@ -246,7 +260,7 @@ var db = new Firebase('https://parklux.firebaseio.com');
 
 // Set listener for new parking lot data from Firebase
 function setDataListener(callback) {
-  db.on('child_added', callback);
+  db.orderByKey().limitToLast(1).on('child_added', callback);
 }
 
 /*********************************************

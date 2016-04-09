@@ -89,3 +89,11 @@ html, body {
   border: 1px solid white;
   font-weight: 400;
 }
+
+.green {
+  color: rgb(0, 249, 100);
+}
+
+.red {
+  color: rgb(255, 54, 7);
+}
