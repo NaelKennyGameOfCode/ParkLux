@@ -6,6 +6,7 @@ var map;  // Google map object
 var markers = [];  // Keeps track of all parking lot markers
 var locationMarker;  // Keeps track of the current location marker
 var closestLotLine;  // Keeps track of the line to the closest lot
+var lastOpenInfoWindow;  // Keeps track of the last open info window 
 
 /*********************************************
 * Page elements
@@ -24,7 +25,7 @@ function gotLocation(position) {
 $('#about-button').click(function () {
   swal({
     title: 'About',
-    html: 'This web app displays live parking data in the City of Luxembourg, and allows you to find the closest available parking lot to your current location.<br/><br/>Built by <a href="http://kennysong.com" target="_blank">Kenny Song</a> and Nael Hailemariam in 24 hours for the <a href="http://www.gameofcode.eu/" target="_blank">Game of Code 2016</a>.',
+    html: 'This web app displays live parking data in the City of Luxembourg, tracks historical trends in parking behavior, and quickly finds the closest available parking lot to your current location.<br/><br/>Built by <a href="http://kennysong.com" target="_blank">Kenny Song</a> and Nael Hailemariam in 24 hours for the <a href="http://www.gameofcode.eu/" target="_blank">Game of Code 2016</a>.',
     confirmButtonText: 'Awesome!',
   });
 });
@@ -161,8 +162,8 @@ function drawLotsFromSnapshot(snapshot) {
           icon: '/static/img/unavailable_icon.png'
         });
       }
-      
 
+      // Add InfoWindow to the marker
       var className = (lot.available > 0 && lot.open) ? 'green' : 'red';
       var infoContent = '<h2 class=' + className + '>' + lotName + '</h2>' +
                         '<p><strong>Available</strong>: ' + lot.available + '</p>' +
@@ -171,6 +172,7 @@ function drawLotsFromSnapshot(snapshot) {
                         '<p><strong>Coordinates</strong>: <a href="http://maps.google.com/maps?q=' + lot.latitude + ',' + lot.longitude + '&z=14&ll=' + lot.latitude + ',' + lot.longitude + '" target="_blank">(' + lot.latitude + ', ' + lot.longitude + ')</a></p>';
       markerAddInfoWindow(marker, infoContent);
 
+      // Add it to the global markers list
       markers.push(marker);
     }
   }
@@ -182,7 +184,9 @@ function markerAddInfoWindow(marker, content) {
     content: content
   });
   google.maps.event.addListener(marker, "click", function (e) { 
+    if (lastOpenInfoWindow) { lastOpenInfoWindow.close(); }
     infoWindow.open(map, this); 
+    lastOpenInfoWindow = infoWindow;
   });
 }
 
@@ -247,6 +251,11 @@ function getClosestLot(coords) {
     }],
     map: map
   });
+
+  // Draw line to closest parking lot
+  locationMarkerContent = '<h2 style="color:rgb(0, 168, 255);">Your Location</h2>' + 
+                          '<p><strong>Coordinates</strong>: <a href="http://maps.google.com/maps?q=' + coords.latitude + ',' + coords.longitude + '&z=14&ll=' + coords.latitude + ',' + coords.longitude + '" target="_blank">(' + coords.latitude + ', ' + coords.longitude + ')</a></p>';
+  markerAddInfoWindow(locationMarker, locationMarkerContent);
 }
 
 // Argmin function for an array
@@ -269,6 +278,11 @@ var db = new Firebase('https://parklux.firebaseio.com');
 // Set listener for new parking lot data from Firebase
 function setDataListener(callback) {
   db.orderByKey().limitToLast(1).on('child_added', callback);
+}
+
+// Gets all data from Firebase and then calls callback
+function getAllData(callback) {
+  db.orderByKey().once('value', callback);
 }
 
 /*********************************************
