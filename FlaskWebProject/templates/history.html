@@ -15,6 +15,9 @@
   <script type="text/javascript" src="/static/js/markerwithlabel_packed.js"></script>
   <script type="text/javascript" src="/static/js/jquery.2.1.4.min.js"></script>
   <script type="text/javascript" src="/static/js/sweetalert2.min.js"></script>
+
+  <script src="https://code.highcharts.com/highcharts.js"></script>
+  <script src="https://code.highcharts.com/modules/exporting.js"></script>
 </head>
 
 <body>
@@ -29,8 +32,10 @@
       <button id="about-button" class="pure-button">About&nbsp;&nbsp;<i class="fa fa-question"></i></button>
     </div>
   </div>
-  <div id="map"></div>
+  <div id="historical_data">
+    <div id="container" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
+  </div>
 
-  <script type="text/javascript" src="/static/js/map.js"></script>
+  <script src="/static/js/history.js"></script>
 </body>
 </html>
