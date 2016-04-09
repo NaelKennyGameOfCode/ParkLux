@@ -4,6 +4,8 @@
 
 var map;  // Google map object
 var markers = [];  // Keeps track of all parking lot markers
+var locationMarker;  // Keeps track of the current location marker
+var closestLotLine;  // Keeps track of the line to the closest lot
 
 /*********************************************
 * Page elements
@@ -16,6 +18,7 @@ $('#locate-button').click(function () {
 // Handler for when we get the user's geolocation 
 function gotLocation(position) {
   console.log(position.coords);
+  getClosestLot(position.coords);
 }
 
 $('#about-button').click(function () {
@@ -125,9 +128,10 @@ function drawLotsFromSnapshot(snapshot) {
     if (snapshot.hasOwnProperty(lotName)) {
       var lot = snapshot[lotName];
 
+      var marker;
       if (lot.available > 0 && lot.open) {
         // Lot is open and has available spots
-        var marker = new MarkerWithLabel({
+        marker = new MarkerWithLabel({
           position: {lat: lot.latitude, lng: lot.longitude},
           map: map,
           labelContent: lot.available + '/' + lot.capacity,
@@ -139,7 +143,7 @@ function drawLotsFromSnapshot(snapshot) {
       } else {
         // Lot is closed or is full
         var labelContent = !lot.open ? 'CLOSED' : '0';
-        var marker = new MarkerWithLabel({
+        marker = new MarkerWithLabel({
           position: {lat: lot.latitude, lng: lot.longitude},
           map: map,
           labelContent: labelContent,
@@ -149,6 +153,11 @@ function drawLotsFromSnapshot(snapshot) {
           icon: '/static/img/unavailable_icon.png'
         });
       }
+
+      // var infoWindow = new google.maps.InfoWindow({
+      //   content: lotName + ': ' + lot.available + '/' + lot.longitude + ' available'
+      // });
+      // google.maps.event.addListener(marker, "click", function (e) { infoWindow.open(map, this); });
 
       markers.push(marker);
     }
@@ -161,6 +170,72 @@ function eraseAllLots() {
     marker.setMap(null);
   });
   markers = [];
+}
+
+// Gets the closest parking lot to the current location
+function getClosestLot(coords) {
+  // Calculate distances to each parking lot
+  distances = [];
+  markers.forEach(function (marker) {
+    if (marker.labelContent === 'CLOSED' || marker.labelContent === '0') {
+      distances.push(Infinity);
+    } else {
+      var dist = Math.pow(marker.position.lat() - coords.latitude, 2) + Math.pow(marker.position.lng() - coords.longitude, 2);
+      distances.push(dist);
+    }
+  });
+
+  // Get the closest parking lot
+  var smallest_index = argmin(distances);
+  var closest_lot = markers[smallest_index];
+  console.log(closest_lot);
+
+  // Display new location information
+  if (locationMarker) { locationMarker.setMap(null); }
+  locationMarker = new MarkerWithLabel({
+    position: {lat: coords.latitude - 0.00025, lng: coords.longitude},
+    map: map,
+    icon: '/static/img/location.png',
+    animation: google.maps.Animation.DROP,
+  });
+
+  // Move map to closest parking lot
+  map.panTo(closest_lot.getPosition());
+
+  // Set marker of closest parking lot marker
+  // TODO: Recolor all markers in the correct color before making a new one blue
+  closest_lot.setIcon('/static/img/closest_icon.png');
+
+  // Draw line to closest parking lot
+  if (closestLotLine) { closestLotLine.setMap(null); }
+  closestLotLine = new google.maps.Polyline({
+    path: [{lat: coords.latitude, lng: coords.longitude}, 
+           {lat: closest_lot.position.lat(), lng: closest_lot.position.lng()}],
+    strokeOpacity: 0,
+    icons: [{
+      icon: {
+        path: 'M 0,-1 0,1',
+        strokeOpacity: 1,
+        scale: 3,
+        strokeColor: '#00a8ff',
+        fillColor: '#00a8ff',
+      },
+      offset: '0',
+      repeat: '20px',
+    }],
+    map: map
+  });
+}
+
+// Argmin function for an array
+function argmin(A) {
+  var min_index = 0;
+  for (i = 1; i < A.length; i++) {
+    if (A[i] < A[min_index]) {
+      min_index = i;
+    }
+  }
+  return min_index;
 }
 
 /*********************************************
