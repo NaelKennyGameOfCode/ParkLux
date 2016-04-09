@@ -135,7 +135,7 @@ function drawLotsFromSnapshot(snapshot) {
           position: {lat: lot.latitude, lng: lot.longitude},
           map: map,
           labelContent: lot.available + '/' + lot.capacity,
-          labelAnchor: new google.maps.Point(22, -4),
+          labelAnchor: new google.maps.Point(32, -4),
           labelClass: "marker-label-available",
           animation: google.maps.Animation.DROP,
           icon: '/static/img/available_icon.png'
@@ -147,7 +147,7 @@ function drawLotsFromSnapshot(snapshot) {
           position: {lat: lot.latitude, lng: lot.longitude},
           map: map,
           labelContent: labelContent,
-          labelAnchor: new google.maps.Point(24, -4),
+          labelAnchor: new google.maps.Point(32, -4),
           labelClass: "marker-label-unavailable",
           animation: google.maps.Animation.DROP,
           icon: '/static/img/unavailable_icon.png'
