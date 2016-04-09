@@ -33,6 +33,10 @@ $('#history-button').click(function () {
   window.location = '/history';
 });
 
+$('#parklux-text').click(function () {
+  window.location = '/';
+})
+
 /*********************************************
  * Map manipulation functions
  *********************************************/
