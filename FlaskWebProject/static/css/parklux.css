@@ -13,7 +13,7 @@ html, body {
   display: flex;
   justify-content: space-between;
 
-  font-family: Monteserrat, sans-serif;
+  font-family: Montserrat, sans-serif;
   background: black;
   color: white;
   height: 40px;
@@ -75,7 +75,6 @@ html, body {
   height: calc(100% - 50px); 
   width: 800px;
   margin: auto;
-  padding-top: 20px;
 }
 
 .marker-label-available {
@@ -104,4 +103,14 @@ html, body {
 
 .red {
   color: rgb(255, 54, 7);
+}
+
+.graph {
+  margin-bottom: 15px !important;
+}
+
+#historical_data {
+  text-align: center;
+  font-size: 26px;
+  font-family: Montserrat;
 }
